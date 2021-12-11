@@ -31,11 +31,13 @@ class Todo {
     );
   }
 }
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 class HomePage extends StatelessWidget {
-  const HomePage({
+  HomePage({
     Key? key,
   }) : super(key: key);
+  final TextEditingController _valorController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +46,45 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            'Verificador de Cep',
-            style: TextStyle(color: Colors.black, fontSize: 22),
+        title: const Text(
+          'Verificador de Cep',
+          style: TextStyle(color: Colors.black, fontSize: 22),
+        ),
+        actions: <Widget>[
+          IconButton(
+            color: Colors.black,
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _valorController.clear();
+            },
+          )
+        ],
+      ),
+      body: Center(
+          child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _valorController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Digite o Cep',
+                hintStyle: const TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Row(
-          children: [Text('Calculadora')],
-        ),
-      ),
+          ElevatedButton(
+              onPressed: () {
+                final int cepDigitado = int.parse(_valorController.text);
+                print(cepDigitado);
+              },
+              child: const Text('Pesquisar'))
+        ],
+      )),
     );
   }
 }
