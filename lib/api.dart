@@ -2,42 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future main() async {
-  final todo = await fetch();
-  print(todo.cidade);
-}
-
-Future<Todo> fetch() async {
-  var cepDigitado = "95572000";
-  var url = 'https://api.postmon.com.br/v1/cep/$cepDigitado';
-  var response = await http.get(Uri.parse(url));
-  var json = jsonDecode(response.body);
-  var todo = Todo.fromJson(json);
-  return todo;
-}
-
-class Todo {
-  final String? cidade;
-  final String? estado;
-  final String cep;
-
-  Todo({this.cidade, this.estado, required this.cep});
-
-  factory Todo.fromJson(Map json) {
-    return Todo(
-      cep: json['cep'],
-      estado: json['estado'],
-      cidade: json['cidade'],
-    );
-  }
-}
-//////////////////////////////////////////////////////////////////////////////////////////////
-
 class HomePage extends StatelessWidget {
   HomePage({
     Key? key,
   }) : super(key: key);
-  final TextEditingController _valorController = TextEditingController();
+  final TextEditingController valorController = TextEditingController();
+  var valorGlobal = 0;
+  ValorController valor = ValorController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +27,7 @@ class HomePage extends StatelessWidget {
             color: Colors.black,
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              _valorController.clear();
+              valorController.clear();
             },
           )
         ],
@@ -66,7 +38,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              controller: _valorController,
+              controller: valorController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'Digite o Cep',
@@ -77,10 +49,19 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                final int cepDigitado = int.parse(_valorController.text);
-                print(cepDigitado);
+          ElevatedButton (
+              onPressed: () async {
+                
+                final todo = await fetch();
+                final int cepDigitado = int.parse(valorController.text);
+                var correto = cepDigitado.toString();
+                var valorFinal = ValorController(valorClasse: correto);
+                var url = 'https://api.postmon.com.br/v1/cep/$correto';
+
+                var cepDigitado1 = ValorController(valorClasse: correto);
+                print(cepDigitado1.valorClasse);
+
+
               },
               child: const Text('Pesquisar'))
         ],
@@ -88,3 +69,41 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+Future main() async {
+  final todo = await fetch();
+  print(todo.cidade);
+}
+
+Future<Todo> fetch() async {
+  //var cepDigitado = '88990000';
+  var cepDigitado = ValorController();
+  var url = 'https://api.postmon.com.br/v1/cep/$cepDigitado';
+  var response = await http.get(Uri.parse(url));
+  var json = jsonDecode(response.body);
+  var todo = Todo.fromJson(json);
+  return todo;
+}
+
+class ValorController {
+  final String? valorClasse;
+  ValorController({this.valorClasse});
+}
+
+class Todo {
+  final String? cidade;
+  final String? estado;
+  final String cep;
+
+  Todo({this.cidade, this.estado, required this.cep});
+
+  factory Todo.fromJson(Map json) {
+    return Todo(
+      cep: json['cep'],
+      estado: json['estado'],
+      cidade: json['cidade'],
+    );
+  }
+}
+//valor.valorClasse.toString()
