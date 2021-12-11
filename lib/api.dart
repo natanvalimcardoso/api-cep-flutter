@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 Future main() async {
   final todo = await fetch();
   print(todo.cidade);
@@ -26,6 +28,36 @@ class Todo {
       cep: json['cep'],
       estado: json['estado'],
       cidade: json['cidade'],
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(
+            'Verificador de Cep',
+            style: TextStyle(color: Colors.black, fontSize: 22),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Row(
+          children: [Text('Calculadora')],
+        ),
+      ),
     );
   }
 }
