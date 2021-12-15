@@ -6,10 +6,8 @@ class HomePage extends StatelessWidget {
   HomePage({
     Key? key,
   }) : super(key: key);
-  final TextEditingController valorController = TextEditingController();
-  var valorGlobal = 0;
-  ValorController valor = ValorController();
-
+  TextEditingController valorController = TextEditingController();
+  String resultado = "Seu cep aparecerá aqui";
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +47,15 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton (
-              onPressed: () async {
-                
-                final todo = await fetch();
-                final int cepDigitado = int.parse(valorController.text);
-                var correto = cepDigitado.toString();
-                var valorFinal = ValorController(valorClasse: correto);
-                var url = 'https://api.postmon.com.br/v1/cep/$correto';
-
-                var cepDigitado1 = ValorController(valorClasse: correto);
-                print(cepDigitado1.valorClasse);
-
-
-              },
-              child: const Text('Pesquisar'))
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: ElevatedButton(
+                onPressed: () async {}, child: const Text('Pesquisar')),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(resultado),
+          )
         ],
       )),
     );
@@ -77,9 +69,7 @@ Future main() async {
 }
 
 Future<Todo> fetch() async {
-  //var cepDigitado = '88990000';
-  var cepDigitado = ValorController();
-  var url = 'https://api.postmon.com.br/v1/cep/$cepDigitado';
+  var url = 'https://api.postmon.com.br/v1/cep/95800-000';
   var response = await http.get(Uri.parse(url));
   var json = jsonDecode(response.body);
   var todo = Todo.fromJson(json);
@@ -106,4 +96,22 @@ class Todo {
     );
   }
 }
+
+
+
 //valor.valorClasse.toString()
+
+ /*  Future<String> _getCep(String cep) async {
+
+    String cep = valorController.text;
+    var url = "https://viacep.com.br/ws/$cep/json/";
+    var response = await http.get(Uri.parse(url));
+      Map<String, dynamic> dados = json.decode(response.body);
+      String logradoura = dados['logradouro'];
+      String bairro = dados['bairro'];
+      String localidade = dados['localidade'];
+      String uf = dados['uf'];
+      String endereco = "$logradoura, $bairro - $localidade - $uf";
+      return endereco;
+  
+  } */
