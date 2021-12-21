@@ -2,11 +2,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   TextEditingController valorController = TextEditingController();
+
   String resultado = "Seu cep aparecerá aqui";
 
   @override
@@ -50,10 +57,19 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
-                onPressed: () async {}, child: const Text('Pesquisar')),
+                onPressed: () {
+                  setState(() async {
+                    var url = 'https://viacep.com.br/ws/${valorController.text}/json/';
+                    var response = await http.get(Uri.parse(url));
+                    var retorno = json.decode(response.body);
+                    resultado = "Cep: ${retorno['cep']}\nCidade: ${retorno['localidade']}\nEstado: ${retorno['uf']}";
+                    
+                  });
+                }, child: const Text('Pesquisar')),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
+        
             child: Text(resultado),
           )
         ],
@@ -62,14 +78,14 @@ class HomePage extends StatelessWidget {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////95800-000
 Future main() async {
   final todo = await fetch();
   print(todo.cidade);
 }
 
 Future<Todo> fetch() async {
-  var url = 'https://api.postmon.com.br/v1/cep/95800-000';
+  var url = 'https://api.postmon.com.br/v1/cep/88990000';
   var response = await http.get(Uri.parse(url));
   var json = jsonDecode(response.body);
   var todo = Todo.fromJson(json);
