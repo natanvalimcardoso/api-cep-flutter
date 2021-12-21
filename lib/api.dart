@@ -16,6 +16,18 @@ class _HomePageState extends State<HomePage> {
 
   String resultado = "Seu cep aparecerá aqui";
 
+  fetch(String teste) async {
+  var url = 'https://api.postmon.com.br/v1/cep/$teste';
+  var response = await http.get(Uri.parse(url));
+  var json = jsonDecode(response.body);
+  var todo = Todo.fromJson(json);
+  setState(() {
+    resultado = "${todo.cep}\n${todo.cidade}\n${todo.estado}";
+  });
+}
+
+  //* Widgets //-----------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,18 +70,12 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
                 onPressed: () {
-                  setState(() async {
-                    var url = 'https://viacep.com.br/ws/${valorController.text}/json/';
-                    var response = await http.get(Uri.parse(url));
-                    var retorno = json.decode(response.body);
-                    resultado = "Cep: ${retorno['cep']}\nCidade: ${retorno['localidade']}\nEstado: ${retorno['uf']}";
-                    
-                  });
+                  fetch(valorController.text);
                 }, child: const Text('Pesquisar')),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
-        
+
             child: Text(resultado),
           )
         ],
@@ -79,19 +85,6 @@ class _HomePageState extends State<HomePage> {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////95800-000
-Future main() async {
-  final todo = await fetch();
-  print(todo.cidade);
-}
-
-Future<Todo> fetch() async {
-  var url = 'https://api.postmon.com.br/v1/cep/88990000';
-  var response = await http.get(Uri.parse(url));
-  var json = jsonDecode(response.body);
-  var todo = Todo.fromJson(json);
-  return todo;
-}
-
 class ValorController {
   final String? valorClasse;
   ValorController({this.valorClasse});
@@ -112,22 +105,3 @@ class Todo {
     );
   }
 }
-
-
-
-//valor.valorClasse.toString()
-
- /*  Future<String> _getCep(String cep) async {
-
-    String cep = valorController.text;
-    var url = "https://viacep.com.br/ws/$cep/json/";
-    var response = await http.get(Uri.parse(url));
-      Map<String, dynamic> dados = json.decode(response.body);
-      String logradoura = dados['logradouro'];
-      String bairro = dados['bairro'];
-      String localidade = dados['localidade'];
-      String uf = dados['uf'];
-      String endereco = "$logradoura, $bairro - $localidade - $uf";
-      return endereco;
-  
-  } */
