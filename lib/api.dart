@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
-
             child: Text(resultado),
           )
         ],
